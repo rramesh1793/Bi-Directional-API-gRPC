@@ -1,0 +1,24 @@
+npm install -g grpc-tools
+sudo chown -R $USER /usr/local/lib/node_modules
+
+PROTOC_ZIP=protoc-3.7.1-osx-x86_64.zip
+sudo curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.7.1/$PROTOC_ZIP
+sudo unzip -o $PROTOC_ZIP -d /usr/local bin/protoc
+sudo unzip -o $PROTOC_ZIP -d /usr/local 'include/*'
+rm -f $PROTOC_ZIP
+
+########go to your project folder#################
+
+protoc -I=. ./protos/dummy.proto \
+  --js_out=import_style=commonjs,binary:./server \
+  --grpc_out=./server \
+  --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin`
+
+
+#############Unary Api request response############
+#############to be done from root of proj#############
+protoc -I=. ./protos/greet.proto \
+  --js_out=import_style=commonjs,binary:./server \
+  --grpc_out=./server \
+  --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin`
+
